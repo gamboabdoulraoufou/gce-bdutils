@@ -32,25 +32,16 @@ bdutil --help
 
 ### 2 - Configure your deployment
 ```sh
-# Writting custom variable configuration files
-nano variable_configuration.sh
-
-"""
-CONFIGBUCKET='google_cloud_storage_bucket_name'
-PROJECT='google_cloud_project_name'
-GCE_IMAGE='backports-debian-7' 
-GCE_ZONE='us-central1-b'
-PREFIX='host_base_name' 
-NUM_WORKERS=8
-"""
+# Generate an env file from flags, then deploy/delete using that file.
+./bdutil -P prod-cluster1  --CONFIGBUCKET prod-bucket1 --NUM_WORKERS 5 generate_config prod1_env.sh
 ```
 
 ### 3 - Deploy your instances
 ```sh
-./bdutil deploy --bucket <configuration-bucket> <any other flags>
+./bdutil -e prod1_env.sh deploy
 ```
 
 ### 4 - Delete your instance
 ```sh
-./bdutil delete -e
+./bdutil -e prod1_env.sh delete
 ```
