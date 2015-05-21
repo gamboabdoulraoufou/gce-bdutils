@@ -54,7 +54,22 @@ bdutil --help
 
 ### 3 - Deploy your instances
 ```sh
+# run cluster
 ./bdutil -e dev1_env.sh extensions/spark/spark_env.sh deploy
+
+# ssh to cluster master
+ssh 
+
+# Se connecter en tant qu'utilisateur hadoop
+su - hadoop
+
+# list files
+ls -l
+
+# list bucket file
+hadoop fs -ls
+gsutil ls gs://bucket
+
 ```
 
 ### 4 - Delete your instance
