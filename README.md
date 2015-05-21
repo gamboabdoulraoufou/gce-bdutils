@@ -33,15 +33,31 @@ bdutil --help
 ### 2 - Configure your deployment
 ```sh
 # Generate an env file from flags, then deploy/delete using that file.
-./bdutil -P prod-cluster1  --CONFIGBUCKET prod-bucket1 --NUM_WORKERS 5 generate_config prod1_env.sh
+./bdutil --CONFIGBUCKET export-rpcm  
+         --PROJECT amiable-port-94415
+         --DEFAULT_FS gs
+         --GCE_MACHINE_TYPE n1-standard-4
+         --GCE_ZONE europe-west1-b
+         --GCE_SERVICE_ACCOUNT_SCOPES storage-full
+         #--HADOOP_TARBALL_URI
+         #--JAVAOPTS
+         --NUM_WORKERS 5
+         --PREFIX rpcm-sp-cluster
+         #--ENABLE_HDFS
+         #--USE_ATTACHED_PDS true
+         #--CREATE_ATTACHED_PDS_ON_DEPLOY true
+         #--DELETE_ATTACHED_PDS_ON_DELETE true
+         #--WORKER_ATTACHED_PDS_SIZE_GB
+         #--NAMENODE_ATTACHED_PD_SIZE_GB
+        generate_config dev1_env.sh
 ```
 
 ### 3 - Deploy your instances
 ```sh
-./bdutil -e prod1_env.sh deploy
+./bdutil -e dev1_env.sh extensions/spark/spark_env.sh deploy
 ```
 
 ### 4 - Delete your instance
 ```sh
-./bdutil -e prod1_env.sh delete
+./bdutil -e dev1_env.sh delete
 ```
