@@ -72,7 +72,40 @@ gsutil ls gs://bucket
 
 ```
 
-### 4 - Delete your instance
+### 4 - Run job with Spark SQL
+```python
+# -*- coding: utf-8 -*-
+from pyspark.sql import SQLContext
+
+# Initialise Spark
+appName = 'RPCM dev App'
+master = 'spark://rpcm-sp-cluster-00:7077' 
+conf = SparkConf().setAppName(appName).setMaster(master)
+sc = SparkContext(conf=conf)
+
+# Load data
+lines = sc.textFile("gs://export-rpcm/trx_poc_.csv")
+parts = lines.map(lambda l: l.split(";"))
+trx = parts.map(lambda p: (p[0], p[1], p[2], p[3], p[4], p[5].strip()))
+
+# The schema is encoded in a string.
+schemaString = "period sub_code hhk_key trx_key_code quantity spend_amount"
+
+fields = [StructField(field_name, StringType(), True) for field_name in schemaString.split()]
+schema = StructType(fields)
+
+# Apply the schema to the RDD.
+schemaPeople = sqlContext.applySchema(trx, schema)
+
+# Register the SchemaRDD as a table.
+schemaPeople.registerTempTable("trx")
+
+# SQL can be run over SchemaRDDs that have been registered as a table.
+results = sqlContext.sql("SELECT COUNT(*) FROM trx")
+```
+
+### 4 - Delete your instance  
+Befor delting instance save custom image!
 ```sh
 ./bdutil -e dev1_env.sh delete
 ```
