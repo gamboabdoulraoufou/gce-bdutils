@@ -4,7 +4,7 @@ bdutil is a command-line script used to manage Hadoop instances on Google Comput
 ### 0 - Prerequisites 
 ```sh
 # Update package source
-sudo apt-get apdate
+sudo apt-get update
 
 # Install gcloud
 curl https://sdk.cloud.google.com | bash
