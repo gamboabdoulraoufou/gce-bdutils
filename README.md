@@ -33,13 +33,17 @@ bdutil --help
 ### 2 - Configure your deployment
 ```sh
 # Generate an env file from flags, then deploy/delete using that file.
-./bdutil --bucket abdoul-spark --project abdoul-project1 --default_fs gs --master_machin_type n1-standard-4 --zone europe-west1-b --num_workers 5 --prefix rpcm-sp-cluster --verbose generate_config spark_dev_env.sh
+./bdutil --bucket abdoul-spark --project abdoul-project1 --default_fs gs --master_machine_type n1-standard-4 --zone europe-west1-b --num_workers 4 --prefix spark-cluster --verbose generate_config spark_dev_env.sh
+
+# Cheick cluster configuration
+nano spark_dev_env.sh
+
 ```
 
 ### 3 - Deploy your instances
 ```sh
 # run cluster
-./bdutil -e spark_dev_env.sh extensions/spark/spark_env.sh deploy
+./bdutil -e spark_dev_env.sh,extensions/spark/spark_env.sh deploy
 
 # ssh to cluster master
 ssh 
@@ -91,5 +95,5 @@ results = sqlContext.sql("SELECT COUNT(*) FROM trx")
 ### 4 - Delete your instance  
 Befor delting instance save custom image!
 ```sh
-./bdutil -e dev1_env.sh delete
+./bdutil -e spark_dev_env delete
 ```
