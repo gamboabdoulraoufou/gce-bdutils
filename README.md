@@ -58,6 +58,10 @@ ls -l
 hadoop fs -ls
 gsutil ls gs://bucket
 
+# Add the PySpark classes to the Python path:
+export PYTHONPATH=/home/hadoop/spark-install/python/:$PYTHONPATH
+export PYTHONPATH=/home/hadoop/spark-install/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
+
 # Go to: IP:8080
 ```
 
