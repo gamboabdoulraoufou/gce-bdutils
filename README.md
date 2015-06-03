@@ -58,9 +58,11 @@ ls -l
 hadoop fs -ls
 gsutil ls gs://bucket
 
+# Go to: IP:8080
 ```
 
-### 4 - Run job with Spark SQL
+
+### 5 - Run job with Spark SQL
 ```python
 # -*- coding: utf-8 -*-
 from pyspark.sql import SQLContext
