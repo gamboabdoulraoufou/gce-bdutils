@@ -58,7 +58,11 @@ ls -l
 hadoop fs -ls
 gsutil ls gs://bucket
 
+#os.environ["SPARK_HOME"]
+SPARK_HOME='/home/hadoop/spark-install'
+
 # Add the PySpark classes to the Python path:
+export SPARK_HOME="$SPARK_HOME"
 export PYTHONPATH=/home/hadoop/spark-install/python/:$PYTHONPATH
 export PYTHONPATH=/home/hadoop/spark-install/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
 
@@ -69,36 +73,64 @@ export PYTHONPATH=/home/hadoop/spark-install/python/lib/py4j-0.8.2.1-src.zip:$PY
 ### 5 - Run job with Spark SQL
 ```python
 # -*- coding: utf-8 -*-
+from pyspark import SparkConf, SparkContext
+from pyspark.sql.types import *
 from pyspark.sql import SQLContext
+
 
 # Initialise Spark
 appName = 'RPCM dev App'
-master = 'spark://rpcm-sp-cluster-00:7077' 
+master = 'spark://rpcm-cluster-m:7077'
 conf = SparkConf().setAppName(appName).setMaster(master)
 sc = SparkContext(conf=conf)
+sqlContext = SQLContext(sc)
 
 # Load data
-lines = sc.textFile("gs://export-rpcm/trx_poc_.csv")
-parts = lines.map(lambda l: l.split(";"))
+lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
+parts = lines.map(lambda l: l.split(","))
 trx = parts.map(lambda p: (p[0], p[1], p[2], p[3], p[4], p[5].strip()))
+
+"""
+#trx = parts.map(lambda p: {"quantity": float(p[0]), "spend_amount":float(p[1]), "period":p[2], "hhk_code":p[3], "trx_key_code":p[4], "sub_code":p[5]})
+
+# Infer the schema, and register the SchemaRDD as a table.
+# In future versions of PySpark we would like to add support
+#schemaTrx = sqlContext.inferSchema(trx)
+"""
 
 # The schema is encoded in a string.
 schemaString = "period sub_code hhk_key trx_key_code quantity spend_amount"
-
 fields = [StructField(field_name, StringType(), True) for field_name in schemaString.split()]
 schema = StructType(fields)
 
 # Apply the schema to the RDD.
-schemaPeople = sqlContext.applySchema(trx, schema)
-
+schemaPeople = sqlContext.createDataFrame(trx, schema)
 # Register the SchemaRDD as a table.
 schemaPeople.registerTempTable("trx")
 
 # SQL can be run over SchemaRDDs that have been registered as a table.
 results = sqlContext.sql("SELECT COUNT(*) FROM trx")
+print 'r\n\n\n\n\n\n'
+print results.collect()
 ```
 
-### 4 - Delete your instance  
+### 4 - Start and stop cluster
+```sh
+# Lancer spark
+./$SPARH_HOME/sbin/start-master.sh 
+
+# Arrêter spark
+./sbin/stop-master.sh 
+
+# Lancer le cluster
+./sbin/start-all.sh 
+
+# Arrêter le cluster
+./sbin/stop-all.sh 
+```
+
+
+### 5 - Delete your instance  
 Befor delting instance save custom image!
 ```sh
 ./bdutil -e spark_dev_env delete
