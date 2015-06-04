@@ -124,13 +124,13 @@ results.to_csv("/home/hadoop/result.csv", sep=';')
 ./$SPARH_HOME/sbin/start-master.sh 
 
 # Arrêter spark
-./sbin/stop-master.sh 
+./$SPARH_HOME/sbin/stop-master.sh 
 
 # Lancer le cluster
-./sbin/start-all.sh 
+./$SPARH_HOME/sbin/start-all.sh 
 
 # Arrêter le cluster
-./sbin/stop-all.sh 
+./$SPARH_HOME/sbin/stop-all.sh 
 ```
 
 
