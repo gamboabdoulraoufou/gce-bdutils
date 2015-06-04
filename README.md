@@ -105,8 +105,9 @@ schemaTrx = sqlContext.inferSchema(trx)
 
 # Apply the schema to the RDD.
 #schemaPeople = sqlContext.createDataFrame(trx, schema)
+
 # Register the SchemaRDD as a table.
-#schemaPeople.registerTempTable("trx")
+schemaTrx.registerTempTable("trx")
 
 # SQL can be run over SchemaRDDs that have been registered as a table.
 results = sqlContext.sql("SELECT COUNT(*) FROM trx")
