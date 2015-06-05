@@ -73,7 +73,7 @@ export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
 ### 5 - Run job with Spark SQL python API
 ```python
 # -*- coding: utf-8 -*-
-import import csv
+import csv
 
 from StringIO import StringIO
 from pyspark import SparkConf, SparkContext
@@ -121,7 +121,7 @@ schemaTrx.registerTempTable("trx")
 # SQL can be run over SchemaRDDs that have been registered as a table.
 results = sqlContext.sql("SELECT COUNT(*) as nb FROM trx")
 print 'r\n\n\n\n\n\n'
-print results.collect()
+#print results.collect()
 
 # Save result as csv file
 def write_csv(records):
@@ -131,7 +131,7 @@ def write_csv(records):
         writer.writerow(record)
     return [output.get_value()]
 
-results.mapPartitions(write_csv).saveAsTextFile("/home/hadoop/result.csv")
+results.mapPartitions(write_csv).saveAsTextFile("result.csv")
 
 ```
 
