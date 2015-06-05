@@ -154,5 +154,5 @@ results.mapPartitions(write_csv).saveAsTextFile("result.csv")
 ### 5 - Delete your instance  
 Befor delting instance save custom image!
 ```sh
-./bdutil -e spark_dev_env delete
+./bdutil -e spark_dev_env.sh delete
 ```
