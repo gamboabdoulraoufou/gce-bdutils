@@ -20,10 +20,10 @@ wget https://storage.googleapis.com/hadoop-tools/bdutil/bdutil-latest.tar.gz
 tar xzvf bdutil-latest.tar.gz
 
 # log on bdutils repository
-cd bdutil-1.2.0
+cd bdutil-x.x.x
 
 # run bdutil --help or a list of commands
-bdutil --help
+./bdutil --help
 ```
 
 ### 1 - Choose a default file system
@@ -33,9 +33,9 @@ bdutil --help
 ### 2 - Configure your deployment
 ```sh
 # Generate an env file from flags, then deploy/delete using that file.
-./bdutil --bucket abdoul-spark --project abdoul-project1 --default_fs gs --master_machine_type n1-standard-4 --zone europe-west1-b --num_workers 4 --prefix spark-cluster --verbose generate_config spark_dev_env.sh
+./bdutil --bucket spark-bucket-rpcm --project amiable-port-94415  --default_fs gs --machine_type n1-standard-2 --force --zone europe-west1-b --num_workers 4 --prefix rpcm-cluster --verbose generate_config spark_dev_env.sh
 
-# Cheick cluster configuration
+# Check cluster configuration
 nano spark_dev_env.sh
 
 ```
@@ -43,7 +43,7 @@ nano spark_dev_env.sh
 ### 3 - Deploy your instances
 ```sh
 # run cluster
-./bdutil -e spark_dev_env.sh,extensions/spark/spark_env.sh deploy
+./bdutil --force -e spark_dev_env.sh,extensions/spark/spark_env.sh deploy
 
 # ssh to cluster master
 ssh 
