@@ -100,7 +100,7 @@ lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
 #transform data
 parts = lines.map(lambda l: l.split(","))
 #trx = parts.map(lambda p: (p[0], p[1], p[2], p[3], p[4], p[5].strip()))
-trx = parts.map(lambda p: Row(quantity=float(p[0]), spend_amount=float(p[1]), period=p[2], hhk_code=p[3], trx_key_code=p[4], sub_code=p[5]))
+trx = parts.map(lambda p: Row(quantity=p[0], spend_amount=p[1], period=p[2], hhk_code=p[3], trx_key_code=p[4], sub_code=p[5]))
 
 # Infer the schema, and register the SchemaRDD as a table.
 # In future versions of PySpark we would like to add support
