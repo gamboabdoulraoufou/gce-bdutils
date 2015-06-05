@@ -46,10 +46,10 @@ nano spark_dev_env.sh
 ./bdutil --force -e spark_dev_env.sh,extensions/spark/spark_env.sh deploy
 
 # ssh to cluster master
-ssh 
+gcloud --project=PROJET_ID compute ssh --zone=europe-west1-b rpcm-cluster-m
 
 # Se connecter en tant qu'utilisateur hadoop
-su - hadoop
+sudo su - hadoop
 
 # list files
 ls -l
@@ -66,13 +66,15 @@ export SPARK_HOME="$SPARK_HOME"
 export PYTHONPATH=$SPARK_HOME/python/:$PYTHONPATH
 export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
 
-# Go to: IP:8080
+# Go to: http:MASTER_IP:8080
 ```
 
 
 ### 5 - Run job with Spark SQL python API
 ```python
 # -*- coding: utf-8 -*-
+#import import csv
+
 from pyspark import SparkConf, SparkContext
 from pyspark.sql.types import *
 from pyspark.sql import SQLContext, Row
@@ -89,10 +91,10 @@ sqlContext = SQLContext(sc)
 lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
 
 # Load data from all csv files in adirectory 
-lines = sc.textFile("gs://export-rpcm/trx_poc/*.csvv")
+#lines = sc.textFile("gs://export-rpcm/trx_poc/*.csvv")
 
 # Load data from gcs 
-lines = sc.textFile("gs://export-rpcm/trx_poc/")
+#lines = sc.textFile("gs://export-rpcm/trx_poc/")
 
 #transform data
 parts = lines.map(lambda l: l.split(","))
