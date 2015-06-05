@@ -73,8 +73,9 @@ export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
 ### 5 - Run job with Spark SQL python API
 ```python
 # -*- coding: utf-8 -*-
-#import import csv
+import import csv
 
+from StringIO import StringIO
 from pyspark import SparkConf, SparkContext
 from pyspark.sql.types import *
 from pyspark.sql import SQLContext, Row
@@ -123,8 +124,14 @@ print 'r\n\n\n\n\n\n'
 print results.collect()
 
 # Save result as csv file
-results.saveAsTextFile("/home/hadoop/result.csv")
+def write_csv(records):
+    output = StringIO()
+    writer = csv.writer()
+    for record in records:
+        writer.writerow(record)
+    return [output.get_value()]
 
+results.mapPartitions(write_csv).saveAsTextFile("/home/hadoop/result.csv")
 
 ```
 
