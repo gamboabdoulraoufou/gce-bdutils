@@ -102,6 +102,9 @@ parts = lines.map(lambda l: l.split(","))
 #trx = parts.map(lambda p: (p[0], p[1], p[2], p[3], p[4], p[5].strip()))
 trx = parts.map(lambda p: Row(quantity=p[0], spend_amount=p[1], period=p[2], hhk_code=p[3], trx_key_code=p[4], sub_code=p[5]))
 
+t = trx.first()
+print (t)
+
 # Infer the schema, and register the SchemaRDD as a table.
 # In future versions of PySpark we would like to add support
 schemaTrx = sqlContext.inferSchema(trx)
@@ -117,6 +120,9 @@ schemaTrx = sqlContext.inferSchema(trx)
 # Register the SchemaRDD as a table.
 #schemaTrx.registerTempTable("trx")
 schemaTrx.registerTempTable("trx")
+
+t = trx.first()
+print (t)
 
 # SQL can be run over SchemaRDDs that have been registered as a table.
 results = sqlContext.sql("SELECT COUNT(*) as nb FROM trx")
