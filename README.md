@@ -33,7 +33,7 @@ cd bdutil-x.x.x
 ### 2 - Configure your deployment
 ```sh
 # Generate an env file from flags, then deploy/delete using that file.
-./bdutil --bucket spark-bucket-rpcm --project amiable-port-94415  --default_fs gs --machine_type n1-standard-2 --force --zone europe-west1-b --num_workers 4 --prefix rpcm-cluster --verbose generate_config spark_dev_env.sh
+./bdutil --bucket spark-bucket-rpcm --project amiable-port-94415  --default_fs gs --machine_type f1-micro --force --zone europe-west1-b --num_workers 1 --prefix rpcm-cluster --verbose generate_config spark_dev_env.sh
 
 # Check cluster configuration
 nano spark_dev_env.sh
