@@ -153,17 +153,20 @@ equaco_class.mapPartitions(write_csv2).saveAsTextFile("resultats" + "equaco_clas
 
 ### 7 - Start and stop cluster
 ```sh
+# Go to: /home/hadoop/spark-install/
+cd /home/hadoop/spark-install/
+
 # Lancer spark
-./$SPARK_HOME/sbin/start-master.sh 
+./sbin/start-master.sh 
 
 # Arrêter spark
-./$SPARK_HOME/sbin/stop-master.sh 
+./sbin/stop-master.sh 
 
 # Lancer le cluster
-./$SPARK_HOME/sbin/start-all.sh 
+./sbin/start-all.sh 
 
 # Arrêter le cluster
-./$SPARK_HOME/sbin/stop-all.sh 
+./sbin/stop-all.sh 
 ```
 
 
