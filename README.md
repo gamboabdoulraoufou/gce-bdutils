@@ -140,7 +140,7 @@ print results
 def write_csv(records):
     output = StringIO()
     f = open('test.csv', 'w')
-    writer = csv.writer(f)
+    writer = csv.writer(output,  fieldnames=["Nb"])
     for record in records:
         writer.writerow(record)
     f.close()
