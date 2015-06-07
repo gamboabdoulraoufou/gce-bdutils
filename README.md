@@ -101,7 +101,7 @@ lines = lines.filter(lambda line: line != header)
 # Load data from all csv files in adirectory 
 #lines = sc.textFile("gs://export-rpcm/trx_poc/*.csvv")
 
-# Load data from gcs 
+# Load data from gcs bucjet
 #lines = sc.textFile("gs://export-rpcm/trx_poc/")
 
 #transform data
