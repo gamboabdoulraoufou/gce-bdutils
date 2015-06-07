@@ -101,9 +101,10 @@ lines = sc.textFile("gs://export-rpcm/trx_poc/*.csv")
 # Filter header
 header = lines.take(1)[0]
 lines = lines.filter(lambda line: line != header)
-
+    
 # Transform data
 parts = lines.map(lambda l: l.split(","))
+parts = parts.filter(lambda line: len(line)==6)
 trx = parts.map(lambda p: Row(quantity=float(p[0]), spend_amount=float(p[1]), period=p[2], hhk_code=p[3], trx_key_code=p[4], sub_code=p[5]))
 
 t = trx.first()
