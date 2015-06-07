@@ -136,15 +136,20 @@ results = sqlContext.sql("SELECT COUNT(*) as nb FROM trx")
 print 'r\n\n\n\n\n\n'
 #print results.collect()
 
+f = open('test.csv', 'w')
+
 # Save result as csv file
 def write_csv(records):
     output = StringIO()
-    writer = csv.writer()
+    writer = csv.writer(f)
     for record in records:
         writer.writerow(record)
     return [output.get_value()]
 
-results.mapPartitions(write_csv).saveAsTextFile("result.csv")
+results.mapPartitions(write_csv).saveAsTextFile("results")
+#results.collect().mapPartitions(write_csv).saveAsTextFile("results")
+
+f.close()
 
 ```
 
