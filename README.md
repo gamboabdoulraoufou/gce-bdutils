@@ -126,7 +126,7 @@ equaco_classe = equaco_temp.map(lambda p: Row(period=p[0], sub_code=p[1], Nb_clt
 schemaEquaco_class = sqlContext.inferSchema(equaco_classe)
 schemaEquaco_class.registerTempTable("equaco_classe")
 equaco_class = sqlContext.sql("SELECT * FROM equaco_classe")
-equaco_class.show()
+#equaco_class.show()
 
 #equaco_temp1 = sqlContext.sql("SELECT period, SUM(Nb_clt) AS Nb_clt, SUM(Nb_trx) AS Nb_trx, SUM(Nb_uvc) AS Nb_uvc, SUM(CA) AS CA FROM equaco_classe GROUUP BY period")
 equaco_temp1 = sqlContext.sql("SELECT period, SUM(Nb_clt) AS Nb_clt, SUM(Nb_trx) AS Nb_trx, SUM(Nb_uvc) AS Nb_uvc, SUM(CA) AS CA FROM equaco_classe GROUP BY period")
@@ -134,7 +134,7 @@ equaco_ge = equaco_temp1.map(lambda p: Row(period=p[0], Nb_clt=float(p[1]), Nb_t
 schemaEquaco_g = sqlContext.inferSchema(equaco_ge)
 schemaEquaco_g.registerTempTable("equaco_ge")
 equaco_g = sqlContext.sql("SELECT * FROM equaco_ge")
-equaco_g.show()
+#equaco_g.show()
 
 # Table header
 equaco_g_headers = ['period', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
@@ -142,15 +142,14 @@ equaco_class_headers = ['period', 'sub_code', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA'
 
 # Save result as csv file
 def write_csv(records, file, header):
-	with open(file+'.csv', 'w', newline='') as csvfile:
-	mywriter = csv.writer(csvfile, delimiter=';')
-	for record in records.collect():
-		mywriter.writerow(record)
-	
-	csvfile.close()
+    with open(file+'.csv', 'w', newline='') as csvfile:
+        mywriter = csv.writer(csvfile, delimiter=';')
+        for record in records.collect():
+            mywriter.writerow(record)
+        csvfile.close()
 
-#write_csv(equaco_class, 'equaco_class', equaco_class_headers)
-#write_csv(equaco_g, 'equaco_global', equaco_g_headers)
+write_csv(equaco_class, 'equaco_class', equaco_class_headers)
+write_csv(equaco_g, 'equaco_global', equaco_g_headers)
 
 for record in equaco_g.collect():
 	print record
