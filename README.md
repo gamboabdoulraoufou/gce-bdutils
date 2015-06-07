@@ -95,15 +95,15 @@ sqlContext = SQLContext(sc)
 # Load data from a single file 
 lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
 
-# Filter header
-header = lines.take(1)[0]
-lines = lines.filter(lambda line: line != header)
-
 # Load data from all csv files in adirectory 
 #lines = sc.textFile("gs://export-rpcm/trx_poc/*.csvv")
 
 # Load data from gcs bucjet
 #lines = sc.textFile("gs://export-rpcm/trx_poc/")
+
+# Filter header
+header = lines.take(1)[0]
+lines = lines.filter(lambda line: line != header)
 
 # Transform data
 parts = lines.map(lambda l: l.split(","))
@@ -120,35 +120,44 @@ schemaTrx = sqlContext.inferSchema(trx)
 schemaTrx.registerTempTable("trx")
 
 # Equaco calculation.
-equaco_g = sqlContext.sql("SELECT period, COUNT(DISTINCT hhk_code) AS Nb_clt, COUNT(DISTINCT trx_key_code) AS Nb_trx, SUM(quantity) AS Nb_uvc, SUM(spend_amount) AS CA, COUNT(DISTINCT trx_key_code)/COUNT(DISTINCT hhk_code) AS Nb_trx_par_clt, SUM(quantity)/COUNT(DISTINCT hhk_code) AS Nb_uvc_par_clt, SUM(spend_amount)/COUNT(DISTINCT hhk_code) AS CA_par_clt, SUM(quantity)/COUNT(DISTINCT trx_key_code) AS Nb_uvc_par_trx, SUM(spend_amount)/COUNT(DISTINCT trx_key_code) AS CA_par_trx, SUM(spend_amount)/COUNT(DISTINCT trx_key_code) AS CA_par_uvc FROM trx GROUP BY period")
-equaco_g_headers = ['period', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
+equaco_temp = sqlContext.sql("SELECT period, sub_code, COUNT(DISTINCT hhk_code) AS Nb_clt, COUNT(DISTINCT trx_key_code) AS Nb_trx, SUM(quantity) AS Nb_uvc, SUM(spend_amount) AS CA FROM trx GROUP BY period, sub_code")
 
-equaco_class = sqlContext.sql("SELECT period, sub_code, COUNT(DISTINCT hhk_code) AS Nb_clt, COUNT(DISTINCT trx_key_code) AS Nb_trx, SUM(quantity) AS Nb_uvc, SUM(spend_amount) AS CA, COUNT(DISTINCT trx_key_code)/COUNT(DISTINCT hhk_code) AS Nb_trx_par_clt, SUM(quantity)/COUNT(DISTINCT hhk_code) AS Nb_uvc_par_clt, SUM(spend_amount)/COUNT(DISTINCT hhk_code) AS CA_par_clt, SUM(quantity)/COUNT(DISTINCT trx_key_code) AS Nb_uvc_par_trx, SUM(spend_amount)/COUNT(DISTINCT trx_key_code) AS CA_par_trx, SUM(spend_amount)/COUNT(DISTINCT trx_key_code) AS CA_par_uvc FROM trx GROUP BY period, sub_code")
-equaco_class_headers = ['period', 'sub_code', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
-
-equaco_g.show()
+equaco_classe = equaco_temp.map(lambda p: Row(period=p[0], sub_code=p[1], Nb_clt=float(p[2]), Nb_trx=float(p[3]), Nb_uvc=float(p[4]), CA=float(p[5]), Nb_trx_par_clt=float(p[3])/float(p[2]), Nb_uvc_par_clt=float(p[4])/float(p[2]), CA_par_clt=float(p[5])/float(p[2]), Nb_uvc_par_trx=float(p[4])/float(p[3]), CA_par_trx=float(p[5])/float(p[3]), CA_par_uvc=float(p[5])/float(p[4])))
+schemaEquaco_class = sqlContext.inferSchema(equaco_classe)
+schemaEquaco_class.registerTempTable("equaco_classe")
+equaco_class = sqlContext.sql("SELECT * FROM equaco_classe")
 equaco_class.show()
 
+#equaco_temp1 = sqlContext.sql("SELECT period, SUM(Nb_clt) AS Nb_clt, SUM(Nb_trx) AS Nb_trx, SUM(Nb_uvc) AS Nb_uvc, SUM(CA) AS CA FROM equaco_classe GROUUP BY period")
+equaco_temp1 = sqlContext.sql("SELECT period, SUM(Nb_clt) AS Nb_clt, SUM(Nb_trx) AS Nb_trx, SUM(Nb_uvc) AS Nb_uvc, SUM(CA) AS CA FROM equaco_classe GROUP BY period")
+equaco_ge = equaco_temp1.map(lambda p: Row(period=p[0], Nb_clt=float(p[1]), Nb_trx=float(p[2]), Nb_uvc=float(p[3]), CA=float(p[4]), Nb_trx_par_clt=float(p[2])/float(p[1]), Nb_uvc_par_clt=float(p[3])/float(p[1]), CA_par_clt=float(p[4])/float(p[1]), Nb_uvc_par_trx=float(p[3])/float(p[2]), CA_par_trx=float(p[4])/float(p[2]), CA_par_uvc=float(p[4])/float(p[3])))
+schemaEquaco_g = sqlContext.inferSchema(equaco_ge)
+schemaEquaco_g.registerTempTable("equaco_ge")
+equaco_g = sqlContext.sql("SELECT * FROM equaco_ge")
+equaco_g.show()
+
+# Table header
+equaco_g_headers = ['period', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
+equaco_class_headers = ['period', 'sub_code', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
+
 # Save result as csv file
-def write_csv1(records):
-    output = StringIO()
-    writer = csv.writer(output,  delimiter=';')
-    writer.writerow(equaco_g_headers)
-    for record in records:
-        writer.writerow(record)
-    return [output.getvalue()]
+def write_csv(records, file, header):
+	with open(file+'.csv', 'w', newline='') as csvfile:
+	mywriter = csv.writer(csvfile, delimiter=';')
+	for record in records.collect():
+		mywriter.writerow(record)
+	
+	csvfile.close()
 
-def write_csv2(records):
-    output = StringIO()
-    writer = csv.writer(output,  delimiter=';')
-    writer.writerow(equaco_g_headers)
-    for record in records:
-        writer.writerow(record)
-    return [output.getvalue()]
-    
-equaco_g.mapPartitions(write_csv1).saveAsTextFile("resultats" + "equaco_global.csv")
-equaco_class.mapPartitions(write_csv2).saveAsTextFile("resultats" + "equaco_class.csv")
+#write_csv(equaco_class, 'equaco_class', equaco_class_headers)
+#write_csv(equaco_g, 'equaco_global', equaco_g_headers)
 
+for record in equaco_g.collect():
+	print record
+
+
+# Spark
+sc.stop()
 ```
 
 ### 7 - Start and stop cluster
