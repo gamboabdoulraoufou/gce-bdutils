@@ -94,6 +94,7 @@ sqlContext = SQLContext(sc)
 
 # Load data from a single file 
 lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
+
 # Filter header
 header = lines.take(1)[0]
 lines = lines.filter(lambda line: line != header)
@@ -104,9 +105,8 @@ lines = lines.filter(lambda line: line != header)
 # Load data from gcs bucjet
 #lines = sc.textFile("gs://export-rpcm/trx_poc/")
 
-#transform data
+# Transform data
 parts = lines.map(lambda l: l.split(","))
-#trx = parts.map(lambda p: (p[0], p[1], p[2], p[3], p[4], p[5].strip()))
 trx = parts.map(lambda p: Row(quantity=float(p[0]), spend_amount=float(p[1]), period=p[2], hhk_code=p[3], trx_key_code=p[4], sub_code=p[5]))
 
 t = trx.first()
@@ -116,38 +116,23 @@ print (t)
 # In future versions of PySpark we would like to add support
 schemaTrx = sqlContext.inferSchema(trx)
 
-# The schema is encoded in a string.
-#schemaString = "period sub_code hhk_key trx_key_code quantity spend_amount"
-#fields = [StructField(field_name, StringType(), True) for field_name in schemaString.split()]
-#schema = StructType(fields)
-
-# Apply the schema to the RDD.
-#schemaPeople = sqlContext.createDataFrame(trx, schema)
-
 # Register the SchemaRDD as a table.
-#schemaTrx.registerTempTable("trx")
 schemaTrx.registerTempTable("trx")
-
-t = trx.first()
-print (t)
 
 # SQL can be run over SchemaRDDs that have been registered as a table.
 results = sqlContext.sql("SELECT COUNT(*) as nb FROM trx")
-print 'r\n\n\n\n\n\n'
-print results
+equaco_g_headers = ['Nb']
 
 # Save result as csv file
 def write_csv(records):
     output = StringIO()
-    f = open('test.csv', 'w')
-    writer = csv.DictWriter(f,  fieldnames=["Nb"])
+    writer = csv.writer(output,  delimiter=';')
+    writer.writerow(equaco_g_headers)
     for record in records:
         writer.writerow(record)
-    f.close()
     return [output.getvalue()]
 
-results.mapPartitions(write_csv).saveAsTextFile("resultats2")
-#results.collect().mapPartitions(write_csv).saveAsTextFile("results")
+results.mapPartitions(write_csv).saveAsTextFile("resultats" + "equaco_global")
 
 ```
 
