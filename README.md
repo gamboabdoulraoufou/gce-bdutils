@@ -154,7 +154,7 @@ for record in equaco_g.collect():
 	print record
 """
 
-gsutil cp *.csv gs://spark-bucket-rpcm/results
+# gsutil cp *.csv gs://spark-bucket-rpcm/results
 
 # Spark
 sc.stop()
