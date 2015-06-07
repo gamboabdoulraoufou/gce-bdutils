@@ -154,16 +154,16 @@ equaco_class.mapPartitions(write_csv2).saveAsTextFile("resultats" + "equaco_clas
 ### 7 - Start and stop cluster
 ```sh
 # Lancer spark
-./$SPARH_HOME/sbin/start-master.sh 
+./$SPARK_HOME/sbin/start-master.sh 
 
 # Arrêter spark
-./$SPARH_HOME/sbin/stop-master.sh 
+./$SPARK_HOME/sbin/stop-master.sh 
 
 # Lancer le cluster
-./$SPARH_HOME/sbin/start-all.sh 
+./$SPARK_HOME/sbin/start-all.sh 
 
 # Arrêter le cluster
-./$SPARH_HOME/sbin/stop-all.sh 
+./$SPARK_HOME/sbin/stop-all.sh 
 ```
 
 
