@@ -33,7 +33,7 @@ cd bdutil-x.x.x
 ### 2 - Configure your deployment
 ```sh
 # Generate an env file from flags, then deploy/delete using that file.
-./bdutil --bucket spark-bucket-rpcm --project amiable-port-94415  --default_fs gs --machine_type n1-standard-1 --force --zone europe-west1-b --num_workers 1 --prefix rpcm-cluster --verbose generate_config spark_dev_env.sh
+./bdutil --bucket spark-bucket-rpcm --project amiable-port-94415  --default_fs gs --machine_type n1-standard-8 --force --zone europe-west1-b --num_workers 5 --prefix rpcm-cluster --verbose generate_config spark_dev_env.sh
 
 # Check cluster configuration
 nano spark_dev_env.sh
@@ -124,7 +124,6 @@ schemaEquaco_class.registerTempTable("equaco_classe")
 equaco_class = sqlContext.sql("SELECT * FROM equaco_classe")
 #equaco_class.show()
 
-#equaco_temp1 = sqlContext.sql("SELECT period, SUM(Nb_clt) AS Nb_clt, SUM(Nb_trx) AS Nb_trx, SUM(Nb_uvc) AS Nb_uvc, SUM(CA) AS CA FROM equaco_classe GROUUP BY period")
 equaco_temp1 = sqlContext.sql("SELECT period, SUM(Nb_clt) AS Nb_clt, SUM(Nb_trx) AS Nb_trx, SUM(Nb_uvc) AS Nb_uvc, SUM(CA) AS CA FROM equaco_classe GROUP BY period")
 equaco_ge = equaco_temp1.map(lambda p: Row(period=p[0], Nb_clt=float(p[1]), Nb_trx=float(p[2]), Nb_uvc=float(p[3]), CA=float(p[4]), Nb_trx_par_clt=float(p[2])/float(p[1]), Nb_uvc_par_clt=float(p[3])/float(p[1]), CA_par_clt=float(p[4])/float(p[1]), Nb_uvc_par_trx=float(p[3])/float(p[2]), CA_par_trx=float(p[4])/float(p[2]), CA_par_uvc=float(p[4])/float(p[3])))
 schemaEquaco_g = sqlContext.inferSchema(equaco_ge)
@@ -148,14 +147,17 @@ def write_csv(records, file, header):
 write_csv(equaco_class, 'equaco_class', equaco_class_headers)
 write_csv(equaco_g, 'equaco_global', equaco_g_headers)
 
-
-# gsutil cp *.csv gs://spark-bucket-rpcm/results
-
 # Spark
 sc.stop()
 ```
 
-### 7 - Start and stop cluster
+### 7 - Copy resuslt on GCS bucket
+```sh
+gsutil cp *.csv gs://spark-bucket-rpcm/results
+
+```
+
+### 8 - Start and stop cluster
 ```sh
 # Go to: /home/hadoop/spark-install/
 cd /home/hadoop/spark-install/
@@ -174,7 +176,7 @@ cd /home/hadoop/spark-install/
 ```
 
 
-### 8 - Delete your instance  
+### 9 - Delete your instance  
 Befor delting instance save custom image!
 ```sh
 ./bdutil -e spark_dev_env.sh delete
