@@ -142,8 +142,9 @@ equaco_class_headers = ['period', 'sub_code', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA'
 
 # Save result as csv file
 def write_csv(records, file, header):
-    with open(file+'.csv', 'w', newline='') as csvfile:
+    with open(file+'.csv', 'w') as csvfile:
         mywriter = csv.writer(csvfile, delimiter=';')
+        mywriter.writerow(header)
         for record in records.collect():
             mywriter.writerow(record)
         csvfile.close()
