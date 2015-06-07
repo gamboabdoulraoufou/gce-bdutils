@@ -94,6 +94,9 @@ sqlContext = SQLContext(sc)
 
 # Load data from a single file 
 lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
+# Filter header
+header = lines.take(1)[0]
+lines = lines.filter(lambda line: line != header)
 
 # Load data from all csv files in adirectory 
 #lines = sc.textFile("gs://export-rpcm/trx_poc/*.csvv")
