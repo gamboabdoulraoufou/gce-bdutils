@@ -144,7 +144,7 @@ def write_csv(records):
     for record in records:
         writer.writerow(record)
     f.close()
-    return [output.get_value()]
+    return [output.getvalue()]
 
 results.mapPartitions(write_csv).saveAsTextFile("results")
 #results.collect().mapPartitions(write_csv).saveAsTextFile("results")
