@@ -139,7 +139,7 @@ print results
 # Save result as csv file
 def write_csv(records):
     output = StringIO()
-    f = open('test.csv', 'w'
+    f = open('test.csv', 'w')
     writer = csv.writer(f)
     for record in records:
         writer.writerow(record)
