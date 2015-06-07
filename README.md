@@ -149,9 +149,12 @@ def write_csv(records, file, header):
 write_csv(equaco_class, 'equaco_class', equaco_class_headers)
 write_csv(equaco_g, 'equaco_global', equaco_g_headers)
 
+"""
 for record in equaco_g.collect():
 	print record
+"""
 
+gsutil cp *.csv gs://spark-bucket-rpcm/results
 
 # Spark
 sc.stop()
