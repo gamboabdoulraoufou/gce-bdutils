@@ -134,22 +134,20 @@ print (t)
 # SQL can be run over SchemaRDDs that have been registered as a table.
 results = sqlContext.sql("SELECT COUNT(*) as nb FROM trx")
 print 'r\n\n\n\n\n\n'
-#print results.collect()
-
-f = open('test.csv', 'w')
+print results
 
 # Save result as csv file
 def write_csv(records):
     output = StringIO()
+    f = open('test.csv', 'w'
     writer = csv.writer(f)
     for record in records:
         writer.writerow(record)
+    f.close()
     return [output.get_value()]
 
 results.mapPartitions(write_csv).saveAsTextFile("results")
 #results.collect().mapPartitions(write_csv).saveAsTextFile("results")
-
-f.close()
 
 ```
 
@@ -169,7 +167,7 @@ f.close()
 ```
 
 
-### 5 - Delete your instance  
+### 8 - Delete your instance  
 Befor delting instance save custom image!
 ```sh
 ./bdutil -e spark_dev_env.sh delete
