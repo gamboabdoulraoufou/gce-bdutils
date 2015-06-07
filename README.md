@@ -139,11 +139,11 @@ print results
 # Save result as csv file
 def write_csv(records):
     output = StringIO()
-    f = open('test.csv', 'w')
-    writer = csv.writer(output,  fieldnames=["Nb"])
+    #f = open('test.csv', 'w')
+    writer = csv.DictWriter(output,  fieldnames=["Nb"])
     for record in records:
         writer.writerow(record)
-    f.close()
+    #f.close()
     return [output.getvalue()]
 
 results.mapPartitions(write_csv).saveAsTextFile("results")
