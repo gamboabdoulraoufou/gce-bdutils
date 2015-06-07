@@ -119,9 +119,41 @@ schemaTrx = sqlContext.inferSchema(trx)
 # Register the SchemaRDD as a table.
 schemaTrx.registerTempTable("trx")
 
-# SQL can be run over SchemaRDDs that have been registered as a table.
-results = sqlContext.sql("SELECT COUNT(*) as nb FROM trx")
-equaco_g_headers = ['Nb']
+# Equaco calculation.
+equaco_g = sqlContext.sql("SELECT period,
+                                  COUNT(DISTINCT hhk_code) AS Nb_clt,
+                                  COUNT(DISTINCT trx_key_code) AS Nb_trx,
+                                  SUM(quantity) AS Nb_uvc,
+                                  SUM(spend_amount) AS CA, 
+                                  COUNT(DISTINCT trx_key_code)/COUNT(DISTINCT hhk_code) AS Nb_trx_par_clt,
+                                  SUM(quantity)/COUNT(DISTINCT hhk_code) AS Nb_uvc_par_clt,
+                                  SUM(spend_amount)/COUNT(DISTINCT hhk_code) AS CA_par_clt,
+                                  SUM(quantity)/COUNT(DISTINCT trx_key_code) AS Nb_uvc_par_trx,
+                                  SUM(spend_amount)/COUNT(DISTINCT trx_key_code) AS CA_par_trx,
+                                  SUM(spend_amount)/COUNT(DISTINCT trx_key_code) AS CA_par_uvc
+                           FROM trx
+                           GROUP BY period")
+
+equaco_g_headers = ['period', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
+
+equaco_class = sqlContext.sql("SELECT period, sub_code,
+                                  COUNT(DISTINCT hhk_code) AS Nb_clt,
+                                  COUNT(DISTINCT trx_key_code) AS Nb_trx,
+                                  SUM(quantity) AS Nb_uvc,
+                                  SUM(spend_amount) AS CA, 
+                                  COUNT(DISTINCT trx_key_code)/COUNT(DISTINCT hhk_code) AS Nb_trx_par_clt,
+                                  SUM(quantity)/COUNT(DISTINCT hhk_code) AS Nb_uvc_par_clt,
+                                  SUM(spend_amount)/COUNT(DISTINCT hhk_code) AS CA_par_clt,
+                                  SUM(quantity)/COUNT(DISTINCT trx_key_code) AS Nb_uvc_par_trx,
+                                  SUM(spend_amount)/COUNT(DISTINCT trx_key_code) AS CA_par_trx,
+                                  SUM(spend_amount)/COUNT(DISTINCT trx_key_code) AS CA_par_uvc
+                           FROM trx
+                           GROUP BY period, sub_code")
+
+equaco_class_headers = ['period', 'sub_code', 'Nb_clt', 'Nb_clt', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
+
+equaco_g.show()
+equaco_class.show()
 
 # Save result as csv file
 def write_csv(records):
@@ -132,7 +164,8 @@ def write_csv(records):
         writer.writerow(record)
     return [output.getvalue()]
 
-results.mapPartitions(write_csv).saveAsTextFile("resultats" + "equaco_global")
+equaco_g.mapPartitions(write_csv).saveAsTextFile("resultats" + "equaco_global.csv")
+equaco_class.mapPartitions(write_csv).saveAsTextFile("resultats" + "equaco_class.csv")
 
 ```
 
