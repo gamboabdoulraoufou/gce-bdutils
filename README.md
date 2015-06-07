@@ -93,10 +93,10 @@ sc = SparkContext(conf=conf)
 sqlContext = SQLContext(sc)
 
 # Load data from a single file 
-#lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
+lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
 
 # Load data from all csv files in adirectory 
-lines = sc.textFile("gs://export-rpcm/trx_poc/*.csv")
+#lines = sc.textFile("gs://export-rpcm/trx_poc/*.csv")
 
 # Filter header
 header = lines.take(1)[0]
@@ -135,8 +135,8 @@ equaco_g = sqlContext.sql("SELECT * FROM equaco_ge")
 equaco_g.show()
 
 # Table header
-equaco_g_headers = ['period', 'Nb_clt', 'Nb_trx', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
-equaco_class_headers = ['period', 'sub_code', 'Nb_trx', 'Nb_clt', 'Nb_uvc', 'CA', 'Nb_trx_par_clt', 'Nb_uvc_par_clt', 'CA_par_clt', 'Nb_uvc_par_trx', 'CA_par_trx', 'CA_par_uvc']
+equaco_g_headers = ['CA', 'CA_par_clt', 'CA_par_trx', 'CA_par_uvc', 'Nb_clt',  'Nb_trx',  'Nb_uvc', 'Nb_trx_par_clt', 'Nb_uvc_par_clt',  'Nb_uvc_par_trx', 'period']
+equaco_class_headers = ['CA', 'CA_par_clt', 'CA_par_trx', 'CA_par_uvc', 'Nb_clt',  'Nb_trx',  'Nb_uvc', 'Nb_trx_par_clt', 'Nb_uvc_par_clt',  'Nb_uvc_par_trx', 'period', 'sub_code']
 
 # Save result as csv file
 def write_csv(records, file, header):
