@@ -69,8 +69,12 @@ export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
 # Go to: http:MASTER_IP:8080
 ```
 
+### 5 - Run spark shell for interactive analysis
+```sh
+./bin/pyspark
+```
 
-### 5 - Run job with Spark SQL python API
+### 6 - Run job with Spark SQL python API
 ```python
 # -*- coding: utf-8 -*-
 import csv
@@ -141,7 +145,7 @@ results.mapPartitions(write_csv).saveAsTextFile("result.csv")
 
 ```
 
-### 4 - Start and stop cluster
+### 7 - Start and stop cluster
 ```sh
 # Lancer spark
 ./$SPARH_HOME/sbin/start-master.sh 
