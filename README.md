@@ -93,13 +93,10 @@ sc = SparkContext(conf=conf)
 sqlContext = SQLContext(sc)
 
 # Load data from a single file 
-lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
+#lines = sc.textFile("gs://export-rpcm/trx_poc/trx_proc_1.csv")
 
 # Load data from all csv files in adirectory 
-#lines = sc.textFile("gs://export-rpcm/trx_poc/*.csvv")
-
-# Load data from gcs bucjet
-#lines = sc.textFile("gs://export-rpcm/trx_poc/")
+lines = sc.textFile("gs://export-rpcm/trx_poc/*.csv")
 
 # Filter header
 header = lines.take(1)[0]
