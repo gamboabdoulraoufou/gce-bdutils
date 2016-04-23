@@ -35,6 +35,9 @@ cd bdutil-x.x.x
 # Generate an env file from flags, then deploy/delete using that file.
 ./bdutil --bucket abdoul-spark-bucket --project hadoop-1148  --default_fs gs --machine_type n1-standard-1 --force --zone us-central1-c --num_workers 5 --prefix spark-cluster --verbose generate_config spark_dev_env.sh
 
+# Add execution right to the config file
+chmod 777 spark_dev_env.sh
+
 # Check cluster configuration
 nano spark_dev_env.sh
 
@@ -43,7 +46,7 @@ nano spark_dev_env.sh
 ### 3 - Deploy your instances
 ```sh
 # run cluster
-./bdutil --force -e spark_dev_env.sh,extensions/querytools/querytools_env.sh,extensions/spark/spark_env.sh deploy
+sudo ./bdutil --force -e spark_dev_env.sh,extensions/querytools/querytools_env.sh,extensions/spark/spark_env.sh deploy
 
 # ssh to cluster master
 gcloud --project=hadoop-1148 compute ssh --zone=us-central1-c spark-cluster-m
