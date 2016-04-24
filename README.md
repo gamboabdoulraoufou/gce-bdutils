@@ -69,6 +69,7 @@ export SPARK_HOME="$SPARK_HOME"
 export PYTHONPATH=$SPARK_HOME/python/:$PYTHONPATH
 export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
 
+# Allow to http traffic to master node
 # Go to: http:130.211.191.147:8080
 ```
 
