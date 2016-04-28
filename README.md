@@ -46,7 +46,7 @@ nano spark_dev_env.sh
 ### 3 - Deploy your instances
 ```sh
 # run cluster
-./bdutil --force -e spark_dev_env.sh,hadoop2_env.sh,extensions/querytools/querytools_env.sh,extensions/spark/spark_env.sh deploy
+./bdutil --force -e spark_dev_env.sh,extensions/querytools/querytools_env.sh,extensions/spark/spark_env.sh deploy
 
 # ssh to cluster master
 gcloud --project=hadoop-1148 compute ssh --zone=us-central1-c spark-cluster-m
