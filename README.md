@@ -33,7 +33,7 @@ cd bdutil-x.x.x
 ### 2 - Configure your deployment
 ```sh
 # Generate an env file from flags, then deploy/delete using that file.
-./bdutil --project scrib-tech --bucket scrib-tech-spark --default_fs hdfs --zone us-central1-c --num_workers 2 --machine_type n1-standard-1 --image ubuntu-14-04 --worker_boot_disk_size_gb 50 --hadoop_tarball_uri gs://hadoop-dist/hadoop-2.4.1-bin.tar.gz   --prefix spark-cluster --verbose generate_config --force spark_dev_env.sh
+./bdutil --project scrib-tech --bucket scrib-tech-spark --default_fs hdfs --zone us-central1-c --num_workers 2 --machine_type n1-standard-1 --image ubuntu-14-04 --worker_boot_disk_size_gb 50 --prefix spark-cluster --verbose generate_config --force spark_dev_env.sh
 
 # Add execution right to the config file
 chmod 777 spark_dev_env.sh
