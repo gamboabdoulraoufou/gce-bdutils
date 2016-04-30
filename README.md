@@ -76,7 +76,7 @@ export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
 ### 5 - Run spark shell for interactive analysis
 ```sh
 cd spark-install
-./bin/pyspark
+./bin/pyspark --num-executors --executor-memory 2G --total-executor-cores 1
 ```
 
 ### 6 - Run job with Spark SQL python API
