@@ -109,7 +109,7 @@ sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
 # Query hive table
-print(sqlContext.sql("select * from test_database.product3").collect())
+print(hiveContext.sql("select * from test_database.product3").collect())
 
 # Load data from a single file 
 lines = sc.textFile("gs://abdoul-spark-bucket/trx.csv")
