@@ -69,14 +69,22 @@ export SPARK_HOME="$SPARK_HOME"
 export PYTHONPATH=$SPARK_HOME/python/:$PYTHONPATH
 export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
 
+export SPARK_HIVE=true
+
 # Allow to http traffic to master node
 # Go to: http:130.211.191.147:8080
 ```
 
 ### 5 - Run spark shell for interactive analysis
 ```sh
+# Pyspark
 cd spark-install
 ./bin/pyspark --num-executors --executor-memory 2G --total-executor-cores 1
+
+# Pyspark with HiveContext
+cd spark-install
+pyspark --jar /home/hadoop/hive-0.12.0-bin/lib
+
 ```
 
 ### 6 - Run job with Spark SQL python API
@@ -88,14 +96,20 @@ from StringIO import StringIO
 from pyspark import SparkConf, SparkContext
 from pyspark.sql.types import *
 from pyspark.sql import SQLContext, Row
+from pyspark.sql import HiveContext
 
 
 # Initialise Spark
 appName = 'Spark demo App'
 master = 'spark://spark-cluster-m:7077'
 conf = SparkConf().setAppName(appName).setMaster(master)
+conf.set("spark.jars", "/home/hadoop/hive-0.12.0-bin/lib")
 sc = SparkContext(conf=conf)
 sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
+
+# Query hive table
+print(sqlContext.sql("select * from test_database.product3").collect())
 
 # Load data from a single file 
 lines = sc.textFile("gs://abdoul-spark-bucket/trx.csv")
