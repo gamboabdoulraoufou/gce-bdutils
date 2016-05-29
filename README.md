@@ -78,8 +78,8 @@ export SPARK_HIVE=true
 ### 5 - Run spark shell for interactive analysis
 ```sh
 # Pyspark
-cd spark-install
-./bin/pyspark --num-executors --executor-memory 2G --total-executor-cores 1
+cd spark-install/bin
+./pyspark --num-executors 2 --executor-memory 2G --total-executor-cores 1
 
 # Pyspark with HiveContext
 cd spark-install
