@@ -33,7 +33,7 @@ cd bdutil-x.x.x
 ### 2 - Configure your deployment
 ```sh
 # Generate an env file from flags, then deploy/delete using that file.
-./bdutil --project scrib-tech --bucket scrib-tech-spark --default_fs hdfs --zone us-central1-c --num_workers 2 --machine_type n1-standard-1 --image ubuntu-14-04 --worker_boot_disk_size_gb 50 --prefix spark-cluster --verbose generate_config --force spark_dev_env.sh
+./bdutil --project Equipe --bucket velvet-demo-bucket --default_fs hdfs --zone us-central1-c --num_workers 5 --machine_type n1-standard-1 --image ubuntu-14-04 --worker_boot_disk_size_gb 50 --prefix demo-cluster --verbose generate_config --force spark_dev_env.sh
 
 # Add execution right to the config file
 chmod 777 spark_dev_env.sh
@@ -49,9 +49,9 @@ nano spark_dev_env.sh
 ./bdutil --force -e spark_dev_env.sh,extensions/querytools/querytools_env.sh,extensions/spark/spark_env.sh deploy
 
 # ssh to cluster master
-gcloud --project=hadoop-1148 compute ssh --zone=us-central1-c spark-cluster-m
+gcloud --project=equipe-1314 compute ssh --zone=us-central1-c demo-cluster-m
 
-# Se connecter en tant qu'utilisateur hadoop
+# Change user
 sudo su - hadoop
 
 # list files
@@ -59,17 +59,15 @@ ls -l
 
 # list bucket file
 hadoop fs -ls
-gsutil ls gs://abdoul-spark-bucket
+gsutil ls gs://velvet-demo-bucket
 
-#os.environ["SPARK_HOME"]
+# Set Spark home
 SPARK_HOME='/home/hadoop/spark-install'
 
 # Add the PySpark classes to the Python path:
 export SPARK_HOME="$SPARK_HOME"
 export PYTHONPATH=$SPARK_HOME/python/:$PYTHONPATH
 export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip:$PYTHONPATH
-
-export SPARK_HIVE=true
 
 # Allow to http traffic to master node
 # Go to: http:130.211.191.147:8080
