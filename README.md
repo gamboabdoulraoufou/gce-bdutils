@@ -33,7 +33,7 @@ cd bdutil-x.x.x
 ### 2 - Configure your deployment
 ```sh
 # Generate an env file from flags, then deploy/delete using that file.
-./bdutil --project Equipe --bucket velvet-demo-bucket --default_fs hdfs --zone us-central1-c --num_workers 5 --machine_type n1-standard-1 --image ubuntu-14-04 --worker_boot_disk_size_gb 50 --prefix demo-cluster --verbose generate_config --force spark_dev_env.sh
+./bdutil --project equipe-1314 --bucket velvet-demo-bucket --default_fs hdfs --zone us-central1-c --num_workers 5 --machine_type n1-standard-1 --image ubuntu-14-04 --worker_boot_disk_size_gb 50 --prefix demo-cluster --verbose generate_config --force spark_dev_env.sh
 
 # Add execution right to the config file
 chmod 777 spark_dev_env.sh
